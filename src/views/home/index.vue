@@ -1,12 +1,5 @@
 <template>
-  <div class="home">
-    <second-nav>
-      <template slot="list">
-        <li v-for="item in secondNavList" :key="item.value" class="nav-item">
-          <div class="category-popover-box">{{ item.label }}</div>
-        </li>
-      </template>
-    </second-nav>
+  <div class="view welcome-view">
     <div class="timeline-container">
       <third-nav>
         <template slot="list">
@@ -20,62 +13,27 @@
         </template>
       </third-nav>
     </div>
+    <!-- 列表 -->
+    <div class="welcome-context">
+      <context-left />
+      <context-right />
+    </div>
   </div>
 </template>
 
 <script>
-import secondNav from '@/components/NavBar/secondNav';
 import thirdNav from '@/components/NavBar/thirdNav';
+import contextLeft from '@/components/context/contextLeft.vue';
+import contextRight from '@/components/context/contextRight.vue';
 export default {
-  name: 'Home',
+  name: 'home',
   components: {
-    secondNav,
     thirdNav,
+    contextLeft,
+    contextRight,
   },
   data() {
     return {
-      secondNavList: [
-        {
-          label: '推荐',
-          value: 1,
-        },
-        {
-          label: '关注',
-          value: 2,
-        },
-        {
-          label: '前端',
-          value: 3,
-        },
-        {
-          label: '后端',
-          value: 4,
-        },
-        {
-          label: 'Android',
-          value: 5,
-        },
-        {
-          label: 'ios',
-          value: 6,
-        },
-        {
-          label: '人工智能',
-          value: 7,
-        },
-        {
-          label: '开发工具',
-          value: 8,
-        },
-        {
-          label: '代码人生',
-          value: 9,
-        },
-        {
-          label: '阅读',
-          value: 10,
-        },
-      ],
       threeNavList: [
         {
           label: '全部',

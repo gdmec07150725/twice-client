@@ -13,6 +13,7 @@ export default {
 <style lang="less" scoped>
 .view-nav {
   position: fixed;
+  left: 0;
   top: 61px;
   width: 100%;
   height: 46px;
