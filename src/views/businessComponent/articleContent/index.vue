@@ -60,6 +60,7 @@ export default {
     ...mapMutations(['CHANGESHOWUSERDROPDOWN']),
     handleQuillEditorInput(value) {
       if (value) {
+        console.log(value);
         this.richForm.content = value;
       }
     },
