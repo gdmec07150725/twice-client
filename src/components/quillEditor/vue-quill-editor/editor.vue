@@ -1,3 +1,4 @@
+/* eslint-disable vue/no-reserved-keys */
 <template>
   <div class="quill-editor">
     <slot name="toolbar"></slot>
@@ -7,16 +8,16 @@
 
 <script>
 // require sources
-import _Quill from "quill";
-import defaultOptions from "./options";
+import _Quill from 'quill';
+import defaultOptions from './options';
 const Quill = window.Quill || _Quill;
 
 // pollfill
-if (typeof Object.assign != "function") {
-  Object.defineProperty(Object, "assign", {
+if (typeof Object.assign != 'function') {
+  Object.defineProperty(Object, 'assign', {
     value(target, varArgs) {
       if (target == null) {
-        throw new TypeError("Cannot convert undefined or null to object");
+        throw new TypeError('Cannot convert undefined or null to object');
       }
       const to = Object(target);
       for (let index = 1; index < arguments.length; index++) {
@@ -32,18 +33,18 @@ if (typeof Object.assign != "function") {
       return to;
     },
     writable: true,
-    configurable: true
+    configurable: true,
   });
 }
 
 // export
 export default {
-  name: "quill-editor",
+  name: 'quill-editor',
   data() {
     return {
       _options: {},
-      _content: "",
-      defaultOptions
+      _content: '',
+      defaultOptions,
     };
   },
   props: {
@@ -51,18 +52,18 @@ export default {
     value: String,
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     options: {
       type: Object,
       required: false,
-      default: () => ({})
+      default: () => ({}),
     },
     globalOptions: {
       type: Object,
       required: false,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
   mounted() {
     this.initialize();
@@ -101,29 +102,29 @@ export default {
         }
 
         // Mark model as touched if editor lost focus
-        this.quill.on("selection-change", range => {
+        this.quill.on('selection-change', range => {
           if (!range) {
-            this.$emit("blur", this.quill);
+            this.$emit('blur', this.quill);
           } else {
-            this.$emit("focus", this.quill);
+            this.$emit('focus', this.quill);
           }
         });
 
         // Update model if text changes
-        this.quill.on("text-change", (delta, oldDelta, source) => {
+        this.quill.on('text-change', (delta, oldDelta, source) => {
           let html = this.$refs.editor.children[0].innerHTML;
           const quill = this.quill;
           const text = this.quill.getText();
-          if (html === "<p><br></p>") html = "";
+          if (html === '<p><br></p>') html = '';
           this._content = html;
-          this.$emit("input", this._content);
-          this.$emit("change", { html, text, quill });
+          this.$emit('input', this._content);
+          this.$emit('change', { html, text, quill });
         });
 
         // Emit ready event
-        this.$emit("ready", this.quill);
+        this.$emit('ready', this.quill);
       }
-    }
+    },
   },
   watch: {
     // Watch content change
@@ -133,7 +134,7 @@ export default {
           this._content = newVal;
           this.quill.pasteHTML(newVal);
         } else if (!newVal) {
-          this.quill.setText("");
+          this.quill.setText('');
         }
       }
     },
@@ -144,7 +145,7 @@ export default {
           this._content = newVal;
           this.quill.pasteHTML(newVal);
         } else if (!newVal) {
-          this.quill.setText("");
+          this.quill.setText('');
         }
       }
     },
@@ -153,7 +154,7 @@ export default {
       if (this.quill) {
         this.quill.enable(!newVal);
       }
-    }
-  }
+    },
+  },
 };
 </script>
