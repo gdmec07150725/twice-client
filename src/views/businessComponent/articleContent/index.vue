@@ -10,6 +10,11 @@
           </div>
           <div class="main-image-selector with-padding unset">
             <div class="toggle-btn"></div>
+            <div class="panel">
+              <div class="title">添加封面大图</div>
+              <button class="select-btn">点击此处添加图片</button>
+            </div>
+            <input type="file" style="display: none;" />
           </div>
           <div class="publish-popup with-padding">
             <div class="toggle-btn">
@@ -130,6 +135,53 @@ export default {
           background-repeat: no-repeat;
           cursor: pointer;
           background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjI4cHgiIGhlaWdodD0iMjhweCIgdmlld0JveD0iMCAwIDI4IDI4IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPCEtLSBHZW5lcmF0b3I6IHNrZXRjaHRvb2wgMy44LjMgKDI5ODAyKSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT42OTlFRDExRS03RjE2LTQwQTUtODlERC1DOUFERTMwQ0NCNEM8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIHNrZXRjaHRvb2wuPC9kZXNjPgogICAgPGRlZnM+PC9kZWZzPgogICAgPGcgaWQ9IjAuMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9Ik1hcmtkb3du77yN57yW6L6RMyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyNDcuMDAwMDAwLCAtMTguMDAwMDAwKSIgZmlsbD0iI0JGQzZDRSI+CiAgICAgICAgICAgIDxnIGlkPSJoZWRlcl9pbWciIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEyNDcuMDAwMDAwLCAxOC4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik01LDcgTDI0LDcgTDI0LDIxIEw1LDIxIEw1LDcgWiBNNiw4IEwyMyw4IEwyMywxNSBMNiwxNSBMNiw4IFogTTksMTEgQzkuNTUyMjg0NzUsMTEgMTAsMTAuNTUyMjg0NyAxMCwxMCBDMTAsOS40NDc3MTUyNSA5LjU1MjI4NDc1LDkgOSw5IEM4LjQ0NzcxNTI1LDkgOCw5LjQ0NzcxNTI1IDgsMTAgQzgsMTAuNTUyMjg0NyA4LjQ0NzcxNTI1LDExIDksMTEgWiBNMjIsMTQgTDEwLDE0IEwxNC4yNTcwOTkxLDEwLjgwNzgxMDEgTDE1Ljc3ODAyNiwxMS44MzM4NzEyIEwxOS4yMzQ2NzgyLDguOTgzNzAxNjIgTDIyLDExLjAxNTA5NTIgTDIyLDE0IFoiPjwvcGF0aD4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+);
+        }
+        .panel {
+          position: absolute;
+          margin-top: 17px;
+          padding: 24px;
+          top: 100%;
+          left: 50%;
+          font-size: 14px;
+          white-space: nowrap;
+          color: #909090;
+          background-color: #fff;
+          border: 1px solid #ddd;
+          border-radius: 2px;
+          box-shadow: 0 1px 2px #f1f1f1;
+          transform: translateX(-50%);
+          cursor: default;
+          z-index: 100;
+          .title {
+            margin-bottom: 14px;
+            font-size: 19px;
+            font-weight: 700;
+            color: hsla(218, 9%, 51%, 0.8);
+          }
+          .select-btn {
+            width: 240px;
+            height: 96px;
+            font-size: 16px;
+            color: rgba(51, 51, 51, 0.4);
+            background-color: hsla(0, 0%, 87%, 0.6);
+            border: none;
+            outline: none;
+            cursor: pointer;
+          }
+        }
+        .panel:before {
+          content: '';
+          position: absolute;
+          margin-left: -0.5rem;
+          top: -0.6rem;
+          left: 50%;
+          width: 1rem;
+          height: 1rem;
+          background-color: #fff;
+          border: 1px solid #ddd;
+          border-right: none;
+          border-bottom: none;
+          transform: rotate(45deg);
         }
       }
       .publish-popup {

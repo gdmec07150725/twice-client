@@ -102,6 +102,7 @@ Quill.register(FileBlot);
 Quill.register('modules/imageDrop', ImageDrop);
 Quill.register('modules/imageResize', ImageResize);
 import jQuery from 'jquery';
+import hljs from 'highlight.js';
 
 export default {
   name: 'editor',
@@ -128,7 +129,7 @@ export default {
       default: false,
     },
     defaultHeight: {
-      type: Number,
+      type: [Number, String],
       default: 100,
     },
   },
@@ -162,7 +163,7 @@ export default {
       // eslint-disable-next-line vue/no-reserved-keys
       _content: '', // 临时存储，为了reload的情况
       content: '',
-      baseURL: `${configs.serverURL}/admin/cms/articles/images`,
+      baseURL: `${configs.serverURL}/upload-service/upload`,
       editorOption: {
         placeholder: '',
         bounds: `#${this.language}_parent_${this.formName} .quill-editor-wrapper`,
@@ -196,6 +197,9 @@ export default {
               color: 'white',
             },
             modules: ['Resize', 'DisplaySize', 'Toolbar'],
+          },
+          syntax: {
+            highlight: text => hljs.highlightAuto(text).value,
           },
         },
       },
@@ -389,14 +393,15 @@ export default {
       }, 0);
     },
     handleQuillAvatarSuccess(res) {
-      const { data: { http } = {} } = res;
+      console.log(res);
+      const { data } = res;
       // 获取富文本组件实例
       let quill = this.$refs[`${this.language}_${this.formName}`].quill;
-      if (http) {
+      if (data) {
         // 获取光标所在位置
         let length = quill.getSelection().index;
         // 插入图片，http为服务器返回的图片链接地址
-        quill.insertEmbed(length, 'image', http);
+        quill.insertEmbed(length, 'image', data);
         // 调整光标到最后
         quill.setSelection(length + 1);
         this.closeLoading();
@@ -642,6 +647,7 @@ export default {
 .ql-toolbar {
   white-space: normal !important;
 }
+
 // 隐藏link tooltip
 // .quill-editor-wrapper .ql-container .ql-tooltip {
 //   display: none;
@@ -670,5 +676,9 @@ export default {
   height: 22px;
   padding: 3px;
   float: right;
+}
+.ql-toolbar.ql-snow,
+.ql-container.ql-snow {
+  border: none !important;
 }
 </style>

@@ -8,8 +8,14 @@ import '@/styles/quill.core.css';
 import '@/styles/quill.snow.css';
 import '@/assets/font/iconfont.css';
 import IconFont from '@/components/icon-font';
+import { Loading } from 'element-ui';
+
+Vue.use(Loading.directive); // 使用loading
 
 Vue.component('icon-font', IconFont); // 全局注册icon组件
+
+Vue.prototype.$loading = Loading.service;
+
 Vue.config.productionTip = false;
 
 new Vue({
