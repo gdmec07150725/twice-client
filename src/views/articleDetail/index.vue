@@ -1,7 +1,7 @@
 <template>
   <div class="welcome-context">
     <context-left>
-      <div slot="leftContent" v-html="content"></div>
+      <div slot="leftContent" v-html="content" class="ql-editor"></div>
     </context-left>
     <context-right />
   </div>
