@@ -9,12 +9,31 @@
             <a>草稿</a>
           </div>
           <div class="main-image-selector with-padding unset">
-            <div class="toggle-btn"></div>
-            <div class="panel">
+            <div
+              class="toggle-btn"
+              :class="{ hasCoverImage: richForm.coverImage ? true : false }"
+              @click="handleToggleCoverImage"
+            ></div>
+            <div class="panel" v-if="toggleCoverImage">
               <div class="title">添加封面大图</div>
-              <button class="select-btn">点击此处添加图片</button>
+              <template v-if="!richForm.coverImage">
+                <button class="select-btn" @click="handleUpload">
+                  点击此处添加图片
+                </button>
+              </template>
+              <template v-else>
+                <img
+                  :src="richForm.coverImage"
+                  width="240"
+                  @click="handleUpload"
+                  class="coverImage"
+                />
+              </template>
             </div>
-            <input type="file" style="display: none;" />
+            <customizeUpload
+              ref="customizeUpload"
+              @onHandleImageUrl="handleImageUrl"
+            />
           </div>
           <div class="publish-popup with-padding">
             <div class="toggle-btn">
@@ -31,6 +50,12 @@
         </div>
       </header>
       <main class="rich-text-editor-main">
+        <textarea
+          placeholder="请输入标题"
+          maxlength="80"
+          rows="1"
+          class="title-input"
+        ></textarea>
         <quill-editor
           :value="richForm.content"
           :needReload="false"
@@ -48,21 +73,28 @@
 import { mapMutations } from 'vuex';
 import avatarNavigation from '@/components/avatarNavigation';
 import quillEditor from '_c/quillEditor/quillEditor.vue';
+import customizeUpload from '_c/customizeUpload';
 export default {
   name: 'articleContent',
   components: {
     avatarNavigation,
     quillEditor,
+    customizeUpload,
   },
   data() {
     return {
       richForm: {
         content: '',
+        coverImage: '',
       },
+      toggleCoverImage: false,
     };
   },
   methods: {
     ...mapMutations(['CHANGESHOWUSERDROPDOWN']),
+    handleToggleCoverImage() {
+      this.toggleCoverImage = !this.toggleCoverImage;
+    },
     handleQuillEditorInput(value) {
       if (value) {
         console.log(value);
@@ -71,6 +103,13 @@ export default {
     },
     handleGoHome() {
       this.$router.push({ name: 'home' });
+    },
+    handleUpload() {
+      this.$refs['customizeUpload'] &&
+        this.$refs['customizeUpload'].handleUpload();
+    },
+    handleImageUrl(url) {
+      this.richForm.coverImage = url;
     },
     handleAvatarClick(e) {
       e.stopPropagation();
@@ -168,6 +207,9 @@ export default {
             outline: none;
             cursor: pointer;
           }
+          .coverImage {
+            cursor: pointer;
+          }
         }
         .panel:before {
           content: '';
@@ -218,6 +260,20 @@ export default {
     border-bottom: 1px solid #f7f7f7;
     user-select: none;
     z-index: 50;
+    .title-input {
+      width: 940px;
+      padding: 12px 30px 0;
+      margin: 0;
+      font-size: 2.667rem;
+      font-weight: 700;
+      color: #000;
+      border: none;
+      outline: none;
+      resize: none;
+    }
+  }
+  .hasCoverImage {
+    color: #007fff;
   }
 }
 </style>
