@@ -19,6 +19,7 @@ export default {
   height: 46px;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   background-color: #fff;
+  z-index: 1;
   .nav-list {
     max-width: 960px;
     height: 100%;

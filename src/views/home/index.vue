@@ -42,7 +42,7 @@
             </header>
           </nav>
           <ul class="context-list">
-            <li class="context-item">
+            <li class="context-item" v-for="item in articleList" :key="item.id">
               <div class="context">
                 <a class="context-link">
                   <div class="context-detail">
@@ -66,232 +66,8 @@
                           :to="{ name: 'articleDetail' }"
                           class="title"
                         >
-                          学习JavaScript之节流和防抖
+                          {{ item.title }}
                         </router-link>
-                      </div>
-                      <div class="action-row">
-                        <ul class="action-list">
-                          <li class="item like">
-                            <a class="title-box">
-                              <img
-                                src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg"
-                                class="icon"
-                              />
-                              <span class="count">10</span>
-                            </a>
-                          </li>
-                          <li class="item comment">
-                            <a class="title-box">
-                              <img
-                                src="https://b-gold-cdn.xitu.io/v3/static/img/comment.4d5744f.svg"
-                                class="icon"
-                              />
-                              <span class="count">23</span>
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div data-src="" class="lazy thumb">
-                      <img
-                        src="https://user-gold-cdn.xitu.io/2020/3/7/170b306a69d3fd1c?imageView2/1/w/120/h/120/q/85/format/webp/interlace/1"
-                        width="100%"
-                        height="100%"
-                      />
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </li>
-            <li class="context-item">
-              <div class="context">
-                <a class="context-link">
-                  <div class="context-detail">
-                    <div class="context-info">
-                      <div class="meta-row">
-                        <ul class="meta-list">
-                          <li class="item post">专栏</li>
-                          <li class="item username">
-                            <div class="user-popover-box">
-                              <a href="#">Tony</a>
-                            </div>
-                          </li>
-                          <li class="item time">5分钟前</li>
-                          <li class="item tag">
-                            <a href="#" class="tag">JavaScript</a>
-                          </li>
-                        </ul>
-                      </div>
-                      <div class="title-row">
-                        <a href="#" class="title">学习JavaScript之节流和防抖</a>
-                      </div>
-                      <div class="action-row">
-                        <ul class="action-list">
-                          <li class="item like">
-                            <a class="title-box">
-                              <img
-                                src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg"
-                                class="icon"
-                              />
-                              <span class="count">10</span>
-                            </a>
-                          </li>
-                          <li class="item comment">
-                            <a class="title-box">
-                              <img
-                                src="https://b-gold-cdn.xitu.io/v3/static/img/comment.4d5744f.svg"
-                                class="icon"
-                              />
-                              <span class="count">23</span>
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div data-src="" class="lazy thumb">
-                      <img
-                        src="https://user-gold-cdn.xitu.io/2020/3/7/170b306a69d3fd1c?imageView2/1/w/120/h/120/q/85/format/webp/interlace/1"
-                        width="100%"
-                        height="100%"
-                      />
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </li>
-            <li class="context-item">
-              <div class="context">
-                <a class="context-link">
-                  <div class="context-detail">
-                    <div class="context-info">
-                      <div class="meta-row">
-                        <ul class="meta-list">
-                          <li class="item post">专栏</li>
-                          <li class="item username">
-                            <div class="user-popover-box">
-                              <a href="#">Tony</a>
-                            </div>
-                          </li>
-                          <li class="item time">5分钟前</li>
-                          <li class="item tag">
-                            <a href="#" class="tag">JavaScript</a>
-                          </li>
-                        </ul>
-                      </div>
-                      <div class="title-row">
-                        <a href="#" class="title">学习JavaScript之节流和防抖</a>
-                      </div>
-                      <div class="action-row">
-                        <ul class="action-list">
-                          <li class="item like">
-                            <a class="title-box">
-                              <img
-                                src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg"
-                                class="icon"
-                              />
-                              <span class="count">10</span>
-                            </a>
-                          </li>
-                          <li class="item comment">
-                            <a class="title-box">
-                              <img
-                                src="https://b-gold-cdn.xitu.io/v3/static/img/comment.4d5744f.svg"
-                                class="icon"
-                              />
-                              <span class="count">23</span>
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div data-src="" class="lazy thumb">
-                      <img
-                        src="https://user-gold-cdn.xitu.io/2020/3/7/170b306a69d3fd1c?imageView2/1/w/120/h/120/q/85/format/webp/interlace/1"
-                        width="100%"
-                        height="100%"
-                      />
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </li>
-            <li class="context-item">
-              <div class="context">
-                <a class="context-link">
-                  <div class="context-detail">
-                    <div class="context-info">
-                      <div class="meta-row">
-                        <ul class="meta-list">
-                          <li class="item post">专栏</li>
-                          <li class="item username">
-                            <div class="user-popover-box">
-                              <a href="#">Tony</a>
-                            </div>
-                          </li>
-                          <li class="item time">5分钟前</li>
-                          <li class="item tag">
-                            <a href="#" class="tag">JavaScript</a>
-                          </li>
-                        </ul>
-                      </div>
-                      <div class="title-row">
-                        <a href="#" class="title">学习JavaScript之节流和防抖</a>
-                      </div>
-                      <div class="action-row">
-                        <ul class="action-list">
-                          <li class="item like">
-                            <a class="title-box">
-                              <img
-                                src="https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg"
-                                class="icon"
-                              />
-                              <span class="count">10</span>
-                            </a>
-                          </li>
-                          <li class="item comment">
-                            <a class="title-box">
-                              <img
-                                src="https://b-gold-cdn.xitu.io/v3/static/img/comment.4d5744f.svg"
-                                class="icon"
-                              />
-                              <span class="count">23</span>
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div data-src="" class="lazy thumb">
-                      <img
-                        src="https://user-gold-cdn.xitu.io/2020/3/7/170b306a69d3fd1c?imageView2/1/w/120/h/120/q/85/format/webp/interlace/1"
-                        width="100%"
-                        height="100%"
-                      />
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </li>
-            <li class="context-item">
-              <div class="context">
-                <a class="context-link">
-                  <div class="context-detail">
-                    <div class="context-info">
-                      <div class="meta-row">
-                        <ul class="meta-list">
-                          <li class="item post">专栏</li>
-                          <li class="item username">
-                            <div class="user-popover-box">
-                              <a href="#">Tony</a>
-                            </div>
-                          </li>
-                          <li class="item time">5分钟前</li>
-                          <li class="item tag">
-                            <a href="#" class="tag">JavaScript</a>
-                          </li>
-                        </ul>
-                      </div>
-                      <div class="title-row">
-                        <a href="#" class="title">学习JavaScript之节流和防抖</a>
                       </div>
                       <div class="action-row">
                         <ul class="action-list">
@@ -340,13 +116,21 @@ import secondNav from '@/components/NavBar/secondNav';
 import thirdNav from '@/components/NavBar/thirdNav';
 import contextLeft from '@/components/context/contextLeft.vue';
 import contextRight from '@/components/context/contextRight.vue';
+import scrollToLoad from '@/mixin/scrollToLoad.js';
+import { mapState, mapActions } from 'vuex';
 export default {
   name: 'home',
+  mixins: [scrollToLoad],
   components: {
     secondNav,
     thirdNav,
     contextLeft,
     contextRight,
+  },
+  computed: {
+    ...mapState({
+      articleList: state => state.article.articleList,
+    }),
   },
   data() {
     return {
@@ -451,6 +235,21 @@ export default {
         },
       ],
     };
+  },
+  methods: {
+    ...mapActions(['getArticleList']),
+    async queryListData() {
+      try {
+        this.isScroll = false;
+        await this.getArticleList();
+        this.isScroll = true;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  created() {
+    this.queryListData();
   },
 };
 </script>
