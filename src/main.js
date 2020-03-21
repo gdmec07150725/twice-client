@@ -6,6 +6,7 @@ import '@/styles/index.less'; // 全局样式
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
 import 'quill/dist/quill.bubble.css';
+import 'highlight.js/styles/tomorrow.css'; // highlight.js style
 import '@/assets/font/iconfont.css';
 import IconFont from '@/components/icon-font';
 import { Loading } from 'element-ui';

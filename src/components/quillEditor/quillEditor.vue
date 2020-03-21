@@ -77,6 +77,9 @@ import { quillEditor } from './vue-quill-editor';
 import { ImageDrop } from 'quill-image-drop-module';
 import ImageResize from 'quill-image-resize-module';
 import iconFont from '_c/icon-font';
+import jQuery from 'jquery';
+
+import hljs from 'highlight.js';
 
 let Link = Quill.import('formats/link');
 class FileBlot extends Link {
@@ -101,8 +104,6 @@ Quill.register(FileBlot);
 
 Quill.register('modules/imageDrop', ImageDrop);
 Quill.register('modules/imageResize', ImageResize);
-import jQuery from 'jquery';
-import hljs from 'highlight.js';
 
 export default {
   name: 'editor',
