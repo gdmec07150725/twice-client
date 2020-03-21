@@ -1,11 +1,30 @@
 <template>
   <div class="welcome-context">
-    <context-left>
-      <div
-        slot="leftContent"
-        v-html="content"
-        class="ql-editor article-content"
-      ></div>
+    <context-left class="ql-snow content-wrapper">
+      <article slot="leftContent" class="article">
+        <div class="author-info-block">
+          <a href="#" target="_blank" class="avatar-link">
+            <div class="avatar"></div>
+          </a>
+          <div class="author-info-box">
+            <a target="_blank" class="username ellipsis">Tony</a>
+            <div class="meta-box">
+              <time class="time">2020年03月09日</time>
+              <span class="views-count">阅读 100</span>
+            </div>
+          </div>
+        </div>
+        <div class="lazy article-hero thumb" v-if="articleDetail.image">
+          <img :src="articleDetail.image" width="100%" height="auto" />
+        </div>
+        <h1 class="article-title">
+          {{ articleDetail.title }}
+        </h1>
+        <div
+          v-html="articleDetail.content"
+          class="ql-editor article-content"
+        ></div>
+      </article>
     </context-left>
     <context-right />
   </div>
@@ -13,6 +32,7 @@
 <script>
 import contextLeft from '@/components/context/contextLeft.vue';
 import contextRight from '@/components/context/contextRight.vue';
+import { mapActions } from 'vuex';
 export default {
   name: 'articleDetail',
   components: {
@@ -21,14 +41,109 @@ export default {
   },
   data() {
     return {
-      content:
-        '<h1>从零到一教你基于vue开发一个组件库</h1><h3>前言</h3><p>Vue是一套用于构建用户界面的渐进式框架,目前有越来越多的开发者在学习和使用.在笔者写完 <a href="https://juejin.im/post/5e4d3a8de51d45270a709954" rel="noopener noreferrer" target="_blank">从0到1教你搭建前端团队的组件系统</a> 之后很多朋友希望了解一下如何搭建基于vue的组件系统,所以作为这篇文章的补充,本文来总结一下如何搭建基于vue的组件库.</p><p>虽然笔者有近2年没有从事vue的开发了,但平时一直在关注vue的更新和发展, 笔者一直认为技术团队的组件化之路重点在于基础架构的搭建以及组件化的设计思想,我们完全可以采用不同的框架实现类似的设计,所以<strong>透过现象看本质,思想才是最重要的</strong>.本文主要教大家通过使用vue-cli3</p><p>一步步搭建一个组件库并发布到npm上,但笔者认为重点不在于实现搭建组件库的具体方式,而在于设计组件库的思想和取舍.</p><p><br></p><p>作者：徐小夕_Lab实验室</p><p>链接：https://juejin.im/post/5e63d1c36fb9a07cb427e2c2</p><p>来源：掘金</p><p>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p><p><br></p><h2>你将收获</h2><ul><li>使用vue-cli3搭建团队的组件库并发布到npm</li><li>npm发包的常用基础知识</li></ul><p><br></p><h2>相关资料</h2><ul><li><a href="https://juejin.im/post/5e4d3a8de51d45270a709954" rel="noopener noreferrer" target="_blank" style="color: rgb(2, 105, 200);">从0到1教你搭建前端团队的组件系统（高级进阶必备）</a></li><li><a href="https://juejin.im/post/5d1782eaf265da1ba91592fc" rel="noopener noreferrer" target="_blank" style="color: rgb(2, 105, 200);">一张图教你快速玩转vue-cli3</a></li><li><a href="https://juejin.im/user/5b985481f265da0a87264251/posts" rel="noopener noreferrer" target="_blank" style="color: rgb(2, 105, 200);">vue项目实战经验汇总</a></li></ul><p><br></p>',
+      articleDetail: {
+        content: '',
+        title: '',
+        image: '',
+      },
     };
+  },
+  methods: {
+    ...mapActions(['getArticleDetail']),
+    async handleGetArticleDetail(articleId) {
+      try {
+        const res = await this.getArticleDetail(articleId);
+        if (res) {
+          this.articleDetail = { ...res };
+          console.log(this.articleDetail);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  created() {
+    const {
+      query: { id },
+    } = this.$route;
+    if (id) {
+      this.handleGetArticleDetail(id);
+    }
   },
 };
 </script>
 <style lang="less" scoped>
+.welcome-context {
+  margin-top: 15px;
+  .content-wrapper {
+    position: relative;
+    width: 700px;
+    max-width: 100%;
+    margin-bottom: 1.5rem;
+    padding: 0 2rem;
+    background-color: #fff;
+    border-radius: 2px;
+    box-sizing: border-box;
+    .article {
+      margin-bottom: 36px;
+      padding: 24px 0 0;
+    }
+  }
+  .author-info-block {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+    .avatar-link {
+      font-size: 0;
+    }
+    .avatar {
+      flex: 0 0 auto;
+      margin-right: 12px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-image: url(https://mirror-gold-cdn.xitu.io/168e0858b6ccfd57fe5?imageView2/1/w/100/h/100/q/85/format/webp/in);
+    }
+  }
+  .author-info-box {
+    min-width: 0;
+    flex-grow: 1;
+    .username {
+      display: inline-block;
+      max-width: 100%;
+      font-size: 15px;
+      font-weight: 700;
+      color: #333;
+    }
+    .ellipsis {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .meta-box {
+      font-size: 13px;
+      color: #909090;
+    }
+    .time {
+      letter-spacing: 1px;
+    }
+    .views-count {
+      margin-left: 6px;
+    }
+  }
+  .article-hero {
+    margin-bottom: 24px;
+    width: 100%;
+  }
+  .article-title {
+    margin: 8px 0;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+}
 .article-content {
+  width: 100%;
   word-break: break-word;
   line-height: 1.75;
   font-weight: 400;

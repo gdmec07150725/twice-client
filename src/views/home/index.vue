@@ -41,8 +41,17 @@
               </nav>
             </header>
           </nav>
-          <ul class="context-list">
-            <li class="context-item" v-for="item in articleList" :key="item.id">
+          <ul
+            class="context-list"
+            :canScroll="canScroll"
+            v-scroll-to-load="queryListData"
+          >
+            <li
+              class="context-item"
+              v-for="item in articleList"
+              :key="item.id"
+              @click="() => handleReadDetail(item)"
+            >
               <div class="context">
                 <a class="context-link">
                   <div class="context-detail">
@@ -65,9 +74,8 @@
                         <router-link
                           :to="{ name: 'articleDetail' }"
                           class="title"
+                          >{{ item.title }}</router-link
                         >
-                          {{ item.title }}
-                        </router-link>
                       </div>
                       <div class="action-row">
                         <ul class="action-list">
@@ -92,7 +100,7 @@
                         </ul>
                       </div>
                     </div>
-                    <div data-src="" class="lazy thumb">
+                    <div data-src class="lazy thumb">
                       <img
                         src="https://user-gold-cdn.xitu.io/2020/3/7/170b306a69d3fd1c?imageView2/1/w/120/h/120/q/85/format/webp/interlace/1"
                         width="100%"
@@ -116,11 +124,10 @@ import secondNav from '@/components/NavBar/secondNav';
 import thirdNav from '@/components/NavBar/thirdNav';
 import contextLeft from '@/components/context/contextLeft.vue';
 import contextRight from '@/components/context/contextRight.vue';
-import scrollToLoad from '@/mixin/scrollToLoad.js';
 import { mapState, mapActions } from 'vuex';
+
 export default {
   name: 'home',
-  mixins: [scrollToLoad],
   components: {
     secondNav,
     thirdNav,
@@ -234,17 +241,24 @@ export default {
           value: 13,
         },
       ],
+      canScroll: true,
     };
   },
   methods: {
     ...mapActions(['getArticleList']),
     async queryListData() {
       try {
-        this.isScroll = false;
-        await this.getArticleList();
-        this.isScroll = true;
+        this.canScroll = false;
+        await this.getArticleList(1);
+        this.canScroll = true;
       } catch (error) {
         console.log(error);
+      }
+    },
+    handleReadDetail(item) {
+      const { id } = item;
+      if (id) {
+        this.$router.replace({ name: 'articleDetail', query: { id } });
       }
     },
   },
@@ -254,6 +268,5 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-/* @import './index.less'; */
-@import '~@/views/home/index.less';
+@import './index.less';
 </style>

@@ -24,7 +24,6 @@ export const routes = [
   },
   {
     path: '/articleDetail',
-    name: 'articleDetail',
     component: layouts,
     redirect: '/articleDetail/index',
     children: [
