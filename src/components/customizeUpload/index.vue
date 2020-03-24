@@ -18,6 +18,8 @@ export default {
   methods: {
     ...mapActions(['uploadSingleImage']),
     handleUpload() {
+      // 阻止时间冒泡（但是不生效）
+      event.stopPropagation();
       this.$refs['uploadInput'] && this.$refs['uploadInput'].click();
     },
     handleJudgeImageType(fileList = []) {

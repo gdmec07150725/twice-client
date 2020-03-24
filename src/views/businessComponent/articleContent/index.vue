@@ -12,12 +12,16 @@
             <div
               class="toggle-btn"
               :class="{ hasCoverImage: richForm.coverImage ? true : false }"
-              @click="handleToggleCoverImage"
+              @click.stop="handleToggleCoverImage"
             ></div>
-            <div class="panel" v-if="toggleCoverImage">
+            <div
+              class="panel"
+              v-if="toggleCoverImage"
+              v-click-out="handleToggleCoverImage"
+            >
               <div class="title">添加封面大图</div>
               <template v-if="!richForm.coverImage">
-                <button class="select-btn" @click="handleUpload">
+                <button class="select-btn" @click.stop="handleUpload">
                   点击此处添加图片
                 </button>
               </template>
@@ -25,7 +29,7 @@
                 <img
                   :src="richForm.coverImage"
                   width="240"
-                  @click="handleUpload"
+                  @click.stop="handleUpload"
                   class="coverImage"
                 />
               </template>
@@ -36,9 +40,35 @@
             />
           </div>
           <div class="publish-popup with-padding">
-            <div class="toggle-btn">
-              <span class="title" @click="handleInsertArticle">发布</span>
-              <icon-font icon="icondaosanjiao" />
+            <div class="toggle-btn" @click.stop="handleTogglePublish">
+              <span class="title">
+                发布
+              </span>
+              <icon-font
+                :icon="
+                  togglePublish ? 'iconsanjiao_up_s' : 'iconsanjiao_down_s'
+                "
+                :size="18"
+              />
+            </div>
+            <div
+              class="panel"
+              v-if="togglePublish"
+              v-click-out="handleTogglePublish"
+            >
+              <div class="title">发布文章</div>
+              <div class="category-box">
+                <div class="sub-title">前端</div>
+                <div class="category-list">
+                  <div class="item">JavaScript</div>
+                  <div class="item">Node.js</div>
+                  <div class="item">TypeScript</div>
+                  <div class="item">ES6</div>
+                  <div class="item">React.js</div>
+                  <div class="item">Vue.js</div>
+                </div>
+              </div>
+              <button class="publish-btn">确定并发布</button>
             </div>
           </div>
           <nav
@@ -90,6 +120,7 @@ export default {
         coverImage: '',
       },
       toggleCoverImage: false,
+      togglePublish: false,
     };
   },
   methods: {
@@ -97,6 +128,9 @@ export default {
     ...mapMutations(['CHANGESHOWUSERDROPDOWN']),
     handleToggleCoverImage() {
       this.toggleCoverImage = !this.toggleCoverImage;
+    },
+    handleTogglePublish() {
+      this.togglePublish = !this.togglePublish;
     },
     handleQuillEditorInput(value) {
       if (value) {
