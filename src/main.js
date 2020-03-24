@@ -9,13 +9,11 @@ import 'quill/dist/quill.bubble.css';
 import 'highlight.js/styles/tomorrow.css'; // highlight.js style
 import '@/assets/font/iconfont.css';
 import IconFont from '@/components/icon-font';
-import { Loading } from 'element-ui';
-
-Vue.use(Loading.directive); // 使用loading
+import customizeLoading from '@/lib/loading/index.js';
 
 Vue.component('icon-font', IconFont); // 全局注册icon组件
 
-Vue.prototype.$loading = Loading.service;
+Vue.prototype.$loading = customizeLoading.service;
 
 Vue.config.productionTip = false;
 
