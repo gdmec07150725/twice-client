@@ -432,7 +432,7 @@ export default {
     openLoading() {
       this.dataLoading = '';
       this.dataLoading = this.$loading({
-        lock: true,
+        // lock: true,
         target: this.isFullScreen
           ? document.getElementById(`${this.language}_parent_${this.formName}`)
           : document.getElementById(`${this.language}_${this.formName}`),
