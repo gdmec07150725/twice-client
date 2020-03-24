@@ -43,7 +43,7 @@ export default {
       .banner {
         position: relative;
         height: 200px;
-        border: 1px solid #ff0000;
+        // border: 1px solid #ff0000;
         cursor: pointer;
         .banner-image {
           width: 100%;

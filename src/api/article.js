@@ -1,5 +1,5 @@
 import Restful from './restful';
-// import { stringify } from 'qs';
+import { stringify } from 'qs';
 
 class Article {
   /**
@@ -24,6 +24,22 @@ class Article {
    */
   async getArticleDetail(articleId) {
     return Restful.get(`/user-service/articles/${articleId}`);
+  }
+
+  /**
+   * 获取分类数据
+   * @param {*} params
+   */
+  async getCategoryList(params) {
+    return Restful.get(`/user-service/categories/company?${stringify(params)}`);
+  }
+
+  /**
+   * 获取二级分类
+   * @param {*} id
+   */
+  async getChildCategory(id) {
+    return Restful.get(`/user-service/categories/first/${id}`);
   }
 }
 export default new Article();

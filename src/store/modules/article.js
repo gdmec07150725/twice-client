@@ -9,6 +9,8 @@ const defaultPagination = {
 const state = {
   articleList: [],
   pagination: { ...defaultPagination },
+  categoryList: [],
+  childCategory: [],
 };
 const mutations = {
   SAVE_ARTICLE_LIST(state, data) {
@@ -18,6 +20,16 @@ const mutations = {
     // pagination.total = data.total;
     // state.pagination = { ...pagination };
     state.articleList = [...articleList, ...data];
+  },
+  SAVE_CATEGORY_LIST(state, data) {
+    let { categoryList } = state;
+    categoryList = [...data];
+    state.categoryList = categoryList;
+  },
+  SAVE_CHILD_CATEGORY(state, data) {
+    let { childCategory } = state;
+    childCategory = [...data];
+    state.childCategory = childCategory;
   },
 };
 const actions = {
@@ -59,6 +71,25 @@ const actions = {
         .catch(error => {
           reject(error);
         });
+    });
+  },
+  // 获取分类数据
+  getCategoryList({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      article.getCategoryList(params).then(res => {
+        commit('SAVE_CATEGORY_LIST', res);
+        resolve(res);
+      });
+    });
+  },
+
+  // 通过一级分类查询二级分类
+  getChildCategory({ commit }, id) {
+    return new Promise((resolve, reject) => {
+      article.getChildCategory(id).then(res => {
+        commit('SAVE_CHILD_CATEGORY', res);
+        resolve(res);
+      });
     });
   },
 };

@@ -20,22 +20,25 @@
               v-click-out="handleToggleCoverImage"
             >
               <div class="title">添加封面大图</div>
-              <template v-if="!richForm.coverImage">
-                <button class="select-btn" @click.stop="handleUpload">
-                  点击此处添加图片
-                </button>
-              </template>
-              <template v-else>
-                <img
-                  :src="richForm.coverImage"
-                  width="240"
-                  @click.stop="handleUpload"
-                  class="coverImage"
-                />
-              </template>
+              <div id="coverImage-wrapper">
+                <template v-if="!richForm.coverImage">
+                  <button class="select-btn" @click.stop="handleUpload">
+                    点击此处添加图片
+                  </button>
+                </template>
+                <template v-else>
+                  <img
+                    :src="richForm.coverImage"
+                    width="240"
+                    @click.stop="handleUpload"
+                    class="coverImage"
+                  />
+                </template>
+              </div>
             </div>
             <customizeUpload
               ref="customizeUpload"
+              @onHandleStartUpload="handleStartUpload"
               @onHandleImageUrl="handleImageUrl"
             />
           </div>
@@ -58,17 +61,31 @@
             >
               <div class="title">发布文章</div>
               <div class="category-box">
-                <div class="sub-title">前端</div>
-                <div class="category-list">
-                  <div class="item">JavaScript</div>
-                  <div class="item">Node.js</div>
-                  <div class="item">TypeScript</div>
-                  <div class="item">ES6</div>
-                  <div class="item">React.js</div>
-                  <div class="item">Vue.js</div>
-                </div>
+                <template v-for="item in categoryList">
+                  <div :key="item.id">
+                    <div class="sub-title">{{ item.name }}</div>
+                    <div
+                      class="category-list"
+                      v-if="item.secondCategoriesList.length > 0"
+                    >
+                      <div
+                        :class="[
+                          'item',
+                          itemActive === child.id ? 'itemActive' : '',
+                        ]"
+                        v-for="child in item.secondCategoriesList"
+                        :key="child.id"
+                        @click="itemActive = child.id"
+                      >
+                        {{ child.name }}
+                      </div>
+                    </div>
+                  </div>
+                </template>
               </div>
-              <button class="publish-btn">确定并发布</button>
+              <button class="publish-btn" @click="handleInsertArticle">
+                确定并发布
+              </button>
             </div>
           </div>
           <nav
@@ -101,7 +118,7 @@
   </div>
 </template>
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import { mapMutations, mapActions, mapState } from 'vuex';
 import avatarNavigation from '@/components/avatarNavigation';
 import quillEditor from '_c/quillEditor/quillEditor.vue';
 import customizeUpload from '_c/customizeUpload';
@@ -112,6 +129,11 @@ export default {
     quillEditor,
     customizeUpload,
   },
+  computed: {
+    ...mapState({
+      categoryList: state => state.article.categoryList,
+    }),
+  },
   data() {
     return {
       richForm: {
@@ -121,11 +143,23 @@ export default {
       },
       toggleCoverImage: false,
       togglePublish: false,
+      coverLoading: '', // 上传封面图片的loading
+      itemActive: '',
     };
   },
   methods: {
-    ...mapActions(['insertArticle']),
+    ...mapActions(['insertArticle', 'getCategoryList']),
     ...mapMutations(['CHANGESHOWUSERDROPDOWN']),
+    // 打开loading
+    openLoading() {
+      this.coverLoading = '';
+      this.coverLoading = this.$loading({
+        target: document.getElementById('coverImage-wrapper'),
+      });
+    },
+    closeLoading() {
+      this.coverLoading.close();
+    },
     handleToggleCoverImage() {
       this.toggleCoverImage = !this.toggleCoverImage;
     },
@@ -145,7 +179,11 @@ export default {
       this.$refs['customizeUpload'] &&
         this.$refs['customizeUpload'].handleUpload();
     },
+    handleStartUpload() {
+      this.openLoading();
+    },
     handleImageUrl(url) {
+      this.closeLoading();
       this.richForm.coverImage = url;
     },
     handleAvatarClick(e) {
@@ -155,9 +193,10 @@ export default {
     async handleInsertArticle() {
       try {
         const { title, content, coverImage } = this.richForm;
-        if (title && content) {
+        const { itemActive } = this;
+        if (title && content && itemActive) {
           const params = {
-            categoryId: 1,
+            categoryId: itemActive,
             companyId: 1,
             userId: 1,
             title,
@@ -173,6 +212,16 @@ export default {
         console.log(error);
       }
     },
+    queryCategoryList() {
+      // 做好登录之后需要去掉这个参数
+      const params = {
+        companyId: 1,
+      };
+      this.getCategoryList(params);
+    },
+  },
+  created() {
+    this.queryCategoryList();
   },
 };
 </script>

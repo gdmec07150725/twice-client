@@ -38,6 +38,9 @@ export default {
     .nav-item:first-child {
       padding: 0 12px 0 0;
     }
+    .nav-item-active {
+      color: #007fff;
+    }
   }
 }
 </style>

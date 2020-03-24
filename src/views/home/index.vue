@@ -2,20 +2,54 @@
   <div class="view welcome-view">
     <second-nav>
       <template slot="list">
-        <li v-for="item in secondNavList" :key="item.value" class="nav-item">
-          <div class="category-popover-box">{{ item.label }}</div>
+        <li
+          :class="[
+            'nav-item',
+            secondItemActive === -1 ? 'nav-item-active' : '',
+          ]"
+          @click="() => handleSecondNavClick(-1)"
+        >
+          <div class="category-popover-box">推荐</div>
+        </li>
+        <li
+          :class="['nav-item', secondItemActive === 0 ? 'nav-item-active' : '']"
+          @click="() => handleSecondNavClick(0)"
+        >
+          <div class="category-popover-box">关注</div>
+        </li>
+        <li
+          v-for="item in categoryList"
+          :key="item.id"
+          :class="[
+            'nav-item',
+            secondItemActive === item.id ? 'nav-item-active' : '',
+          ]"
+          @click="() => handleSecondNavClick(item.id)"
+        >
+          <div class="category-popover-box">{{ item.name }}</div>
         </li>
       </template>
     </second-nav>
-    <div class="timeline-container">
+    <div class="timeline-container" v-if="childCategory.length > 0">
       <third-nav>
         <template slot="list">
           <li
-            v-for="item in threeNavList"
-            :key="item.value"
-            class="nav-item tag"
+            :class="['nav-item', 'tag', thirdItemActive === 0 ? 'active' : '']"
+            @click="() => handleThirdNavClick(0)"
           >
-            <a>{{ item.label }}</a>
+            <a>全部</a>
+          </li>
+          <li
+            v-for="item in childCategory"
+            :key="item.id"
+            :class="[
+              'nav-item',
+              'tag',
+              thirdItemActive === item.id ? 'active' : '',
+            ]"
+            @click="() => handleThirdNavClick(item.id)"
+          >
+            <a>{{ item.name }}</a>
           </li>
         </template>
       </third-nav>
@@ -100,12 +134,8 @@
                         </ul>
                       </div>
                     </div>
-                    <div data-src class="lazy thumb">
-                      <img
-                        src="https://user-gold-cdn.xitu.io/2020/3/7/170b306a69d3fd1c?imageView2/1/w/120/h/120/q/85/format/webp/interlace/1"
-                        width="100%"
-                        height="100%"
-                      />
+                    <div data-src class="lazy thumb" v-if="item.image">
+                      <img :src="item.image" width="100%" height="100%" />
                     </div>
                   </div>
                 </a>
@@ -137,115 +167,28 @@ export default {
   computed: {
     ...mapState({
       articleList: state => state.article.articleList,
+      categoryList: state => state.article.categoryList,
+      childCategory: state => state.article.childCategory,
     }),
   },
   data() {
     return {
-      secondNavList: [
-        {
-          label: '推荐',
-          value: 1,
-        },
-        {
-          label: '关注',
-          value: 2,
-        },
-        {
-          label: '前端',
-          value: 3,
-        },
-        {
-          label: '后端',
-          value: 4,
-        },
-        {
-          label: 'Android',
-          value: 5,
-        },
-        {
-          label: 'ios',
-          value: 6,
-        },
-        {
-          label: '人工智能',
-          value: 7,
-        },
-        {
-          label: '开发工具',
-          value: 8,
-        },
-        {
-          label: '代码人生',
-          value: 9,
-        },
-        {
-          label: '阅读',
-          value: 10,
-        },
-      ],
-      threeNavList: [
-        {
-          label: '全部',
-          value: 1,
-        },
-        {
-          label: 'JavaScript',
-          value: 2,
-        },
-        {
-          label: 'Vue.js',
-          value: 3,
-        },
-        {
-          label: 'React.js',
-          value: 4,
-        },
-        {
-          label: 'Node.js',
-          value: 5,
-        },
-        {
-          label: 'CSS',
-          value: 6,
-        },
-        {
-          label: 'Webpack',
-          value: 7,
-        },
-        {
-          label: 'TypeScript',
-          value: 8,
-        },
-        {
-          label: 'Flutter',
-          value: 9,
-        },
-        {
-          label: '微信小程序',
-          value: 10,
-        },
-        {
-          label: 'ECMAScript6',
-          value: 11,
-        },
-        {
-          label: '性能优化',
-          value: 12,
-        },
-        {
-          label: 'HTTP',
-          value: 13,
-        },
-        {
-          label: 'HTML',
-          value: 13,
-        },
-      ],
+      secondItemActive: '',
+      thirdItemActive: '',
       canScroll: true,
     };
   },
   methods: {
-    ...mapActions(['getArticleList']),
+    ...mapActions(['getArticleList', 'getCategoryList', 'getChildCategory']),
+    handleSecondNavClick(id) {
+      this.secondItemActive = id;
+      // 请求二级分类
+      this.getChildCategory(id);
+    },
+    handleThirdNavClick(id) {
+      this.thirdItemActive = id;
+      // 请求文章数据
+    },
     async queryListData() {
       try {
         this.canScroll = false;
@@ -261,9 +204,16 @@ export default {
         this.$router.replace({ name: 'articleDetail', query: { id } });
       }
     },
+    queryCategoryList() {
+      const params = {
+        companyId: 1,
+      };
+      this.getCategoryList(params);
+    },
   },
   created() {
     this.queryListData();
+    this.queryCategoryList();
   },
 };
 </script>

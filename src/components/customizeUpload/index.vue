@@ -56,6 +56,7 @@ export default {
         if (res) {
           const formData = new FormData(); // 使用FormData上传图片
           formData.append('file', res);
+          this.$emit('onHandleStartUpload'); // 开始上传
           const { data } = await this.uploadSingleImage(formData);
           if (data) {
             this.$emit('onHandleImageUrl', data);

@@ -36,6 +36,14 @@ export default {
       margin-right: 12px;
       margin-bottom: 12px;
     }
+    .nav-item.tag.active {
+      background-color: #007fff;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05),
+        0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      a {
+        color: #fff;
+      }
+    }
   }
 }
 </style>
