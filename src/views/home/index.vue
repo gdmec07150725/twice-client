@@ -171,6 +171,14 @@ export default {
       childCategory: state => state.article.childCategory,
     }),
   },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      if (!from.name) {
+        vm.queryListData();
+        vm.queryCategoryList();
+      }
+    });
+  },
   data() {
     return {
       secondItemActive: '',
@@ -210,10 +218,6 @@ export default {
       };
       this.getCategoryList(params);
     },
-  },
-  created() {
-    this.queryListData();
-    this.queryCategoryList();
   },
 };
 </script>
