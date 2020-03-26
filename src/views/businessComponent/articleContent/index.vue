@@ -202,6 +202,7 @@ export default {
             title,
             content,
             image: coverImage,
+            status: 'ARTICLE_STATUS_CHECKING', // 待审核状态
           };
           const res = await this.insertArticle(params);
           if (res && res.message) {
