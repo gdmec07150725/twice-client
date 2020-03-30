@@ -2,8 +2,9 @@
 import article from '@/api/article';
 const defaultPagination = {
   page: 1,
-  rows: 10,
+  rows: 15,
   total: 0,
+  totalPage: 0,
 };
 
 const state = {
@@ -11,15 +12,21 @@ const state = {
   pagination: { ...defaultPagination },
   categoryList: [],
   childCategory: [],
+  secondItem: '', // 选中的一级分类
+  thirdItem: '', // 选中的二级分类
 };
 const mutations = {
   SAVE_ARTICLE_LIST(state, data) {
-    // const { pagination } = state;
+    const { pagination } = state;
     let { articleList } = state;
-    // pagination.page = data.currentPage;
-    // pagination.total = data.total;
-    // state.pagination = { ...pagination };
-    state.articleList = [...articleList, ...data];
+    pagination.page = data.currentPage;
+    pagination.total = data.total;
+    pagination.totalPage = data.totalPage;
+    state.pagination = { ...pagination };
+    state.articleList = [...articleList, ...data.result];
+  },
+  REST_ARTICLE_LIST(state) {
+    state.articleList = [];
   },
   SAVE_CATEGORY_LIST(state, data) {
     let { categoryList } = state;
@@ -30,6 +37,12 @@ const mutations = {
     let { childCategory } = state;
     childCategory = [...data];
     state.childCategory = childCategory;
+  },
+  SET_CATEGORY(state, params) {
+    const { target, value } = params;
+    if (target) {
+      state[target] = value;
+    }
   },
 };
 const actions = {
@@ -47,10 +60,10 @@ const actions = {
     });
   },
   // 获取文章列表数据
-  getArticleList({ commit }, companyId) {
+  getArticleList({ commit }, params) {
     return new Promise((resolve, reject) => {
       article
-        .getArticleList(companyId)
+        .getArticleList(params)
         .then(res => {
           commit('SAVE_ARTICLE_LIST', res);
           resolve(res);

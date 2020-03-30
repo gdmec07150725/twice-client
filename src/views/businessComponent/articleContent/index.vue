@@ -14,11 +14,7 @@
               :class="{ hasCoverImage: richForm.coverImage ? true : false }"
               @click.stop="handleToggleCoverImage"
             ></div>
-            <div
-              class="panel"
-              v-if="toggleCoverImage"
-              v-click-out="handleToggleCoverImage"
-            >
+            <div class="panel" v-if="toggleCoverImage">
               <div class="title">添加封面大图</div>
               <div id="coverImage-wrapper">
                 <template v-if="!richForm.coverImage">
@@ -109,7 +105,7 @@
           :needReload="false"
           formName="article"
           language="zh_cn"
-          defaultHeight="calc(100vh - 61px)"
+          defaultHeight="calc(100vh - 190px)"
           @input="value => handleQuillEditorInput(value)"
           class="quillEditor"
         />

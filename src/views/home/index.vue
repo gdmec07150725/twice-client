@@ -3,10 +3,7 @@
     <second-nav>
       <template slot="list">
         <li
-          :class="[
-            'nav-item',
-            secondItemActive === -1 ? 'nav-item-active' : '',
-          ]"
+          :class="['nav-item', secondItem === -1 ? 'nav-item-active' : '']"
           @click="() => handleSecondNavClick(-1)"
         >
           <div class="category-popover-box">推荐</div>
@@ -20,10 +17,7 @@
         <li
           v-for="item in categoryList"
           :key="item.id"
-          :class="[
-            'nav-item',
-            secondItemActive === item.id ? 'nav-item-active' : '',
-          ]"
+          :class="['nav-item', secondItem === item.id ? 'nav-item-active' : '']"
           @click="() => handleSecondNavClick(item.id)"
         >
           <div class="category-popover-box">{{ item.name }}</div>
@@ -34,7 +28,7 @@
       <third-nav>
         <template slot="list">
           <li
-            :class="['nav-item', 'tag', thirdItemActive === 0 ? 'active' : '']"
+            :class="['nav-item', 'tag', thirdItem === 0 ? 'active' : '']"
             @click="() => handleThirdNavClick(0)"
           >
             <a>全部</a>
@@ -42,11 +36,7 @@
           <li
             v-for="item in childCategory"
             :key="item.id"
-            :class="[
-              'nav-item',
-              'tag',
-              thirdItemActive === item.id ? 'active' : '',
-            ]"
+            :class="['nav-item', 'tag', thirdItem === item.id ? 'active' : '']"
             @click="() => handleThirdNavClick(item.id)"
           >
             <a>{{ item.name }}</a>
@@ -78,7 +68,7 @@
           <ul
             class="context-list"
             :canScroll="canScroll"
-            v-scroll-to-load="queryListData"
+            v-scroll-to-load="judgePagination"
           >
             <li
               class="context-item"
@@ -154,7 +144,7 @@ import secondNav from '@/components/NavBar/secondNav';
 import thirdNav from '@/components/NavBar/thirdNav';
 import contextLeft from '@/components/context/contextLeft.vue';
 import contextRight from '@/components/context/contextRight.vue';
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {
   name: 'home',
@@ -169,12 +159,15 @@ export default {
       articleList: state => state.article.articleList,
       categoryList: state => state.article.categoryList,
       childCategory: state => state.article.childCategory,
+      pagination: state => state.article.pagination,
+      secondItem: state => state.article.secondItem,
+      thirdItem: state => state.article.thirdItem,
     }),
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (!from.name) {
-        vm.queryListData();
+        vm.judgePagination();
         vm.queryCategoryList();
       }
     });
@@ -188,19 +181,56 @@ export default {
   },
   methods: {
     ...mapActions(['getArticleList', 'getCategoryList', 'getChildCategory']),
+    ...mapMutations(['SET_CATEGORY', 'REST_ARTICLE_LIST']),
     handleSecondNavClick(id) {
-      this.secondItemActive = id;
+      const params = {
+        target: 'secondItem',
+        value: id,
+      };
+      this.SET_CATEGORY(params);
       // 请求二级分类
       this.getChildCategory(id);
     },
     handleThirdNavClick(id) {
       this.thirdItemActive = id;
+      const params = {
+        target: 'thirdItem',
+        value: id,
+      };
+      this.SET_CATEGORY(params);
+      this.REST_ARTICLE_LIST(); // 清空文章数据
       // 请求文章数据
+      this.loadListData({ page: 1 });
     },
-    async queryListData() {
+    judgePagination() {
+      // 判断页码，当前页码加1如果大于或总页码就不能请求了
+      const { page, totalPage } = this.pagination;
+      if (totalPage && page + 1 > totalPage) {
+        return;
+      }
+      const params = {
+        page: page + 1,
+      };
+      this.loadListData(params);
+    },
+    loadListData(params = {}) {
+      const concatParams = {
+        ...params,
+        categoryId: this.thirdItem,
+        status: 'ARTICLE_STATUS_ADOPT', // 获取发布状态的文章
+      };
+      this.queryListData(concatParams);
+    },
+    async queryListData(params) {
       try {
+        const concatParams = {
+          page: this.pagination.page,
+          rows: this.pagination.rows,
+          companyId: 1,
+          ...params,
+        };
         this.canScroll = false;
-        await this.getArticleList(1);
+        await this.getArticleList(concatParams);
         this.canScroll = true;
       } catch (error) {
         console.log(error);

@@ -9,17 +9,19 @@
           <ul class="nav-list">
             <li class="main-nav-list">
               <ul class="phone-hide">
-                <li class="nav-item link-item route-active home">
-                  <a>首页</a>
-                </li>
-                <li class="nav-item link-item boilingPoint">
-                  <a>沸点</a>
-                </li>
-                <li class="nav-item link-item lookBack">
-                  <a>财商</a>
-                </li>
-                <li class="nav-item link-item company">
-                  <a>公司</a>
+                <li
+                  v-for="item in navList"
+                  :class="[
+                    'nav-item',
+                    'link-item',
+                    $route.name === item.value ? 'route-active' : '',
+                  ]"
+                  :key="item.value"
+                >
+                  <router-link :to="{ name: item.value }">
+                    {{ item.label }}
+                  </router-link>
+                  <a></a>
                 </li>
               </ul>
             </li>
@@ -73,6 +75,28 @@ export default {
   components: {
     avatarNavigation,
   },
+  data() {
+    return {
+      navList: [
+        {
+          label: '首页',
+          value: 'home',
+        },
+        {
+          label: '沸点',
+          value: 'boilingPoint',
+        },
+        {
+          label: '财商',
+          value: 'lookBack',
+        },
+        {
+          label: '公司',
+          value: 'company',
+        },
+      ],
+    };
+  },
   computed: {
     ...mapState({
       toggleShowAddList: state => state.toggleShowAddList,
@@ -91,6 +115,9 @@ export default {
     handleWriteArticle() {
       this.$router.push({ name: 'publishArticle' });
     },
+  },
+  created() {
+    console.log(this.$route);
   },
 };
 </script>

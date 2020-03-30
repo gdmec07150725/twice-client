@@ -18,7 +18,7 @@ const qa = {
 };
 
 const production = {
-  serverURL: '',
+  serverURL: 'http://101.133.219.6:10010',
   socketURL: '',
 };
 

@@ -12,10 +12,12 @@ class Article {
 
   /**
    * 获取文章列表
-   * @param {*} companyId (后面做好登录之后，不需要传公司id了)
+   * @param {*} params
    */
-  async getArticleList(companyId) {
-    return Restful.get(`/user-service/articles/company/${companyId}`);
+  async getArticleList(params) {
+    return Restful.get(
+      `/user-service/articles/company/${params.companyId}?${stringify(params)}`
+    );
   }
 
   /**
