@@ -21,6 +21,18 @@ class Article {
   }
 
   /**
+   * 根据一级分类查询旗下所有二级分类的文章
+   * @param {*} params
+   */
+  async getArticleListBySecondCategory(params) {
+    return Restful.get(
+      `/user-service/articles/category/${params.categoryId}?${stringify(
+        params
+      )}`
+    );
+  }
+
+  /**
    * 获取文章详情
    * @param {*} companyId (后面做好登录之后，不需要传公司id了)
    */
@@ -38,10 +50,12 @@ class Article {
 
   /**
    * 获取二级分类
-   * @param {*} id
+   * @param {*} params
    */
-  async getChildCategory(id) {
-    return Restful.get(`/user-service/categories/first/${id}`);
+  async getChildCategory(params) {
+    return Restful.get(
+      `/user-service/categories/first/${params.id}?${stringify(params)}`
+    );
   }
 }
 export default new Article();

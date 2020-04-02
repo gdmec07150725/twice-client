@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import article from '@/api/article';
 const defaultPagination = {
-  page: 1,
-  rows: 15,
+  page: 0,
+  rows: 10,
   total: 0,
   totalPage: 0,
 };
@@ -28,21 +28,26 @@ const mutations = {
   REST_ARTICLE_LIST(state) {
     state.articleList = [];
   },
+  REST_PAGINATION(state) {
+    state.pagination = { ...defaultPagination };
+  },
   SAVE_CATEGORY_LIST(state, data) {
     let { categoryList } = state;
-    categoryList = [...data];
+    categoryList = [...data.result];
     state.categoryList = categoryList;
   },
   SAVE_CHILD_CATEGORY(state, data) {
     let { childCategory } = state;
-    childCategory = [...data];
+    childCategory = [...data.result];
     state.childCategory = childCategory;
   },
-  SET_CATEGORY(state, params) {
-    const { target, value } = params;
-    if (target) {
-      state[target] = value;
-    }
+  SET_SECOND_CATEGORY(state, value) {
+    state.secondItem = value;
+    // 清空三级导航的选中值
+    state.thirdItem = '';
+  },
+  SET_THIRD_CATEGORY(state, value) {
+    state.thirdItem = value;
   },
 };
 const actions = {
@@ -60,17 +65,30 @@ const actions = {
     });
   },
   // 获取文章列表数据
-  getArticleList({ commit }, params) {
+  getArticleList({ state, commit }, params) {
     return new Promise((resolve, reject) => {
-      article
-        .getArticleList(params)
-        .then(res => {
-          commit('SAVE_ARTICLE_LIST', res);
-          resolve(res);
-        })
-        .catch(error => {
-          reject(error);
-        });
+      // 只选了一级分类没有二级分类
+      if (state.secondItem && !state.thirdItem) {
+        article
+          .getArticleListBySecondCategory(params)
+          .then(res => {
+            commit('SAVE_ARTICLE_LIST', res);
+            resolve(res);
+          })
+          .catch(error => {
+            reject(error);
+          });
+      } else {
+        article
+          .getArticleList(params)
+          .then(res => {
+            commit('SAVE_ARTICLE_LIST', res);
+            resolve(res);
+          })
+          .catch(error => {
+            reject(error);
+          });
+      }
     });
   },
   // 获取文章详情
@@ -97,9 +115,9 @@ const actions = {
   },
 
   // 通过一级分类查询二级分类
-  getChildCategory({ commit }, id) {
+  getChildCategory({ commit }, params) {
     return new Promise((resolve, reject) => {
-      article.getChildCategory(id).then(res => {
+      article.getChildCategory(params).then(res => {
         commit('SAVE_CHILD_CATEGORY', res);
         resolve(res);
       });

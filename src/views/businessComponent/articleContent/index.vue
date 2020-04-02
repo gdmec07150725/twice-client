@@ -201,6 +201,7 @@ export default {
             status: 'ARTICLE_STATUS_CHECKING', // 待审核状态
           };
           const res = await this.insertArticle(params);
+          this.handleTogglePublish();
           if (res && res.message) {
             alert(res.message);
           }

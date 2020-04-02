@@ -3,18 +3,6 @@
     <second-nav>
       <template slot="list">
         <li
-          :class="['nav-item', secondItem === -1 ? 'nav-item-active' : '']"
-          @click="() => handleSecondNavClick(-1)"
-        >
-          <div class="category-popover-box">推荐</div>
-        </li>
-        <li
-          :class="['nav-item', secondItemActive === 0 ? 'nav-item-active' : '']"
-          @click="() => handleSecondNavClick(0)"
-        >
-          <div class="category-popover-box">关注</div>
-        </li>
-        <li
           v-for="item in categoryList"
           :key="item.id"
           :class="['nav-item', secondItem === item.id ? 'nav-item-active' : '']"
@@ -28,8 +16,12 @@
       <third-nav>
         <template slot="list">
           <li
-            :class="['nav-item', 'tag', thirdItem === 0 ? 'active' : '']"
-            @click="() => handleThirdNavClick(0)"
+            :class="[
+              'nav-item',
+              'tag',
+              secondItem && !thirdItem ? 'active' : '',
+            ]"
+            @click="() => handleThirdNavClick('')"
           >
             <a>全部</a>
           </li>
@@ -145,6 +137,7 @@ import thirdNav from '@/components/NavBar/thirdNav';
 import contextLeft from '@/components/context/contextLeft.vue';
 import contextRight from '@/components/context/contextRight.vue';
 import { mapState, mapMutations, mapActions } from 'vuex';
+import store from '@/store';
 
 export default {
   name: 'home',
@@ -165,39 +158,33 @@ export default {
     }),
   },
   beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (!from.name) {
-        vm.judgePagination();
-        vm.queryCategoryList();
-      }
-    });
+    // 重设文章数据和分页
+    store.commit('REST_ARTICLE_LIST');
+    store.commit('REST_PAGINATION');
+    next();
   },
   data() {
     return {
-      secondItemActive: '',
-      thirdItemActive: '',
       canScroll: true,
     };
   },
   methods: {
     ...mapActions(['getArticleList', 'getCategoryList', 'getChildCategory']),
-    ...mapMutations(['SET_CATEGORY', 'REST_ARTICLE_LIST']),
+    ...mapMutations([
+      'SET_SECOND_CATEGORY',
+      'SET_THIRD_CATEGORY',
+      'REST_ARTICLE_LIST',
+      'REST_PAGINATION',
+    ]),
     handleSecondNavClick(id) {
-      const params = {
-        target: 'secondItem',
-        value: id,
-      };
-      this.SET_CATEGORY(params);
+      this.SET_SECOND_CATEGORY(id);
       // 请求二级分类
-      this.getChildCategory(id);
+      this.querChildCategoryList(id);
+      this.REST_ARTICLE_LIST(); // 清空文章数据
+      this.loadListData({ page: 1 });
     },
     handleThirdNavClick(id) {
-      this.thirdItemActive = id;
-      const params = {
-        target: 'thirdItem',
-        value: id,
-      };
-      this.SET_CATEGORY(params);
+      this.SET_THIRD_CATEGORY(id);
       this.REST_ARTICLE_LIST(); // 清空文章数据
       // 请求文章数据
       this.loadListData({ page: 1 });
@@ -216,7 +203,7 @@ export default {
     loadListData(params = {}) {
       const concatParams = {
         ...params,
-        categoryId: this.thirdItem,
+        categoryId: this.thirdItem || this.secondItem,
         status: 'ARTICLE_STATUS_ADOPT', // 获取发布状态的文章
       };
       this.queryListData(concatParams);
@@ -245,9 +232,25 @@ export default {
     queryCategoryList() {
       const params = {
         companyId: 1,
+        page: 1,
+        rows: 999, // 最大程度获取所有数据（一级一般不会很多数据）
       };
       this.getCategoryList(params);
     },
+    querChildCategoryList(pId) {
+      if (pId) {
+        const params = {
+          page: 1,
+          rows: 999, // 最大程度获取所有数据(Todo： 后面可以改为更多)
+          id: pId,
+        };
+        this.getChildCategory(params);
+      }
+    },
+  },
+  created() {
+    this.judgePagination();
+    this.queryCategoryList();
   },
 };
 </script>
